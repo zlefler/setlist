@@ -7,11 +7,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Artist {
+  id        String    @id @default(uuid())
+  spotifyId String?   @unique
+  name      String    @unique
+  setlists  Setlist[]
+  songs     Song[]
+}
+
+model Song {
+  id              String           @id @default(uuid())
+  spotifyId       String?          @unique
+  title           String
+  artistId        String           @unique
+  artist          Artist           @relation(fields: [artistId], references: [id])
+  setlists        SetlistSong[]
+  SpotifySongInfo SpotifySongInfo?
+}
+
 model Setlist {
-  id        String   @id @default(uuid()) // unique id
-  artist    String
-  venue     String
-  date      String
-  songs     Json
-  createdAt DateTime @default(now())
+  id           String        @id @default(uuid())
+  artistId     String
+  artist       Artist        @relation(fields: [artistId], references: [id])
+  venue        String
+  date         DateTime
+  setlistSongs SetlistSong[]
+  createdAt    DateTime      @default(now())
+}
+
+model SetlistSong {
+  id        String  @id @default(uuid())
+  setlistId String
+  songId    String
+  setlist   Setlist @relation(fields: [setlistId], references: [id])
+  song      Song    @relation(fields: [songId], references: [id])
+}
+
+model SpotifySongInfo {
+  id         String  @id @default(uuid())
+  songId     String  @unique
+  song       Song    @relation(fields: [songId], references: [id])
+  popularity Int?
+  durationMs Int?
+  previewUrl String?
+  spotifyUrl String?
 }

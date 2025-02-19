@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <div>
-      <input onChange={(e) => setBandName(e.target.value.toString)}></input>
+      <input onChange={(e) => setBandName(e.target.value)}></input>
       <button onClick={getBand}>Submit</button>
       <h1>Setlist Data</h1>
       {loading ? (

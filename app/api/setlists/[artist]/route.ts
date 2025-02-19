@@ -6,7 +6,7 @@ export async function GET(
   request: Request,
   context: { params: { artist: string } }
 ) {
-  const { params } = context;
+  const { params } = await context;
 
   if (!params?.artist) {
     return new Response(JSON.stringify({ error: 'Missing artist parameter' }), {
