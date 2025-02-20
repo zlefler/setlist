@@ -19,7 +19,7 @@ model Song {
   id              String           @id @default(uuid())
   spotifyId       String?          @unique
   title           String
-  artistId        String           @unique
+  artistId        String
   artist          Artist           @relation(fields: [artistId], references: [id])
   setlists        SetlistSong[]
   SpotifySongInfo SpotifySongInfo?

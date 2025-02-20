@@ -16,13 +16,13 @@ export async function GET(
 
   const artist = params.artist;
 
-  const existingSetlists = await prisma.setlist.findMany({
-    where: { artist },
-  });
+  // const existingSetlists = await prisma.setlist.findMany({
+  //   where: { artist },
+  // });
 
-  if (existingSetlists.length > 0) {
-    return new Response(JSON.stringify(existingSetlists), { status: 200 });
-  }
+  // if (existingSetlists.length > 0) {
+  //   return new Response(JSON.stringify(existingSetlists), { status: 200 });
+  // }
 
   const url = `https://api.setlist.fm/rest/1.0/search/setlists?artistName=${encodeURIComponent(
     artist

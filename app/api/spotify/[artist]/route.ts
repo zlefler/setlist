@@ -14,6 +14,18 @@ export async function GET(
     });
   }
 
+  const artist = params.artist;
+
+async function fetchWebApi(endpoint, method, body) {
+  const res = await fetch(`https://api.spotify.com/${endpoint}`, {
+    headers: {
+      Authorization: `Bearer ${process.env.SPOTIFY_API_KEY}`,
+    },
+    method,
+    body: JSON.stringify(body),
+  });
+  return await res.json();
+}
 
 async function getTopTracks() {
   // Endpoint reference : https://developer.spotify.com/documentation/web-api/reference/get-users-top-artists-and-tracks
