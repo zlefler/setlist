@@ -18,11 +18,11 @@ async function getSetlistsFromSetlistFM(artistName) {
       },
       params: {
         artistName,
-        p: 1, // Only fetching the first page of results
+        p: 1,
       },
     });
 
-    return response.data.setlist; // Extract setlist array
+    return response.data.setlist;
   } catch (error) {
     console.error(`Error fetching setlists for ${artistName}:`, error);
     return [];
@@ -37,8 +37,6 @@ async function saveSetlistsToDB(artist) {
   const setlists = await getSetlistsFromSetlistFM(artist.name);
 
   for (const setlist of setlists) {
-    await delay(1000); // Add delay to prevent rate-limiting
-
     // Check if setlist already exists
     const setlistExists = await prisma.setlist.findFirst({
       where: {
@@ -68,7 +66,6 @@ async function saveSetlistsToDB(artist) {
       `Created new setlist for ${artist.name} at ${setlist.venue?.name}`
     );
 
-    // Extract song list (ensure we handle nested structure correctly)
     const songs = setlist.sets?.set?.flatMap((set) => set.song) ?? [];
 
     for (const songData of songs) {
@@ -92,17 +89,19 @@ async function saveSetlistsToDB(artist) {
           songId: song.id,
         },
       });
-
-      console.log(`Added "${song.title}" to setlist for ${artist.name}`);
     }
   }
 }
 
 async function processAllArtists() {
   const artists = await getAllArtists();
-
+  const artistCount = artists.length;
+  let i = 1;
   for (const artist of artists) {
+    await delay(1000); // delay to avoid rate limit
+    console.log(`Loading setlists for artist ${artistCount}/${i}...`);
     await saveSetlistsToDB(artist);
+    i += 1;
   }
 
   console.log('Finished processing all artists.');
