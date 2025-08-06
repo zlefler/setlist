@@ -62,10 +62,6 @@ async function saveSetlistsToDB(artist) {
       },
     });
 
-    console.log(
-      `Created new setlist for ${artist.name} at ${setlist.venue?.name}`
-    );
-
     const songs = setlist.sets?.set?.flatMap((set) => set.song) ?? [];
 
     for (const songData of songs) {
@@ -97,9 +93,9 @@ async function processAllArtists() {
   const artists = await getAllArtists();
   const artistCount = artists.length;
   let i = 1;
-  for (const artist of artists) {
+  for (const artist of artists.slice(1500)) {
     await delay(1000); // delay to avoid rate limit
-    console.log(`Loading setlists for artist ${artistCount}/${i}...`);
+    console.log(`Loading setlists for artist ${i}/${artistCount}...`);
     await saveSetlistsToDB(artist);
     i += 1;
   }
